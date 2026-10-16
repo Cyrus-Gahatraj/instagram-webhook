@@ -4,13 +4,13 @@
  */
 
 export default async function handler(req, res) {
-  // Read verification token from environment variables
-  const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
+  // Read verification token from environment variables, or fallback to the token from your dashboard
+  const VERIFY_TOKEN = (process.env.VERIFY_TOKEN || process.env.META_VERIFY_TOKEN || 'cyrus_brain_insta_2026').trim();
 
   // 1. Meta Webhook Verification (GET)
   if (req.method === 'GET') {
     const mode = req.query['hub.mode'];
-    const token = req.query['hub.verify_token'];
+    const token = (req.query['hub.verify_token'] || '').trim();
     const challenge = req.query['hub.challenge'];
 
     if (!mode || !token) {
@@ -21,11 +21,11 @@ export default async function handler(req, res) {
 
     if (mode === 'subscribe' && token === VERIFY_TOKEN) {
       console.log('[Meta Webhook] Verification successful!');
-      // Meta expects the plain challenge value in response body with 200 OK
+      res.setHeader('Content-Type', 'text/plain');
       return res.status(200).send(challenge);
     }
 
-    console.warn('[Meta Webhook] Verification token mismatch.');
+    console.warn(`[Meta Webhook] Token mismatch. Expected: "${VERIFY_TOKEN}", Received: "${token}"`);
     return res.status(403).send('Forbidden: Token mismatch');
   }
 
