@@ -1,0 +1,19 @@
+{
+  "name": "instagram-webhook",
+  "version": "1.0.0",
+  "description": "Instagram API Webhook serverless endpoint for Mindtix",
+  "type": "module",
+  "main": "api/webhook.js",
+  "scripts": {
+    "start": "node api/webhook.js"
+  },
+  "keywords": [
+    "instagram",
+    "webhook",
+    "meta",
+    "mindtix",
+    "vercel"
+  ],
+  "author": "Cyrus Gahatraj",
+  "license": "MIT"
+}
